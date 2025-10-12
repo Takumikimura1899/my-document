@@ -53,13 +53,15 @@ The project now ships with opinionated Markdown tooling:
 - `bun run format:check` — checks whether files are already formatted.
 - `bun run lint` — lints Markdown/MDX content via `markdownlint-cli2` using the rules in
   `.markdownlint-cli2.jsonc`.
+- `bun run lint:secrets` — scans the repository with Secretlint to detect accidentally committed API
+  keys や機密情報。
 
 Prettier ignores build outputs (`dist`, `.astro`, etc.) and markdownlint skips generated folders.
-Git hooks powered by Lefthook run `bun run format:check` and `bun run lint` automatically before
-each commit to keep the repository tidy. Before pushing, Lefthook also triggers a production build
-(`bun run build`) and a Cloudflare Workers dry run (`bun run cf:dry-run`) to catch deployment issues
-early. Set `SKIP=build` or `SKIP=cloudflare` when running `lefthook run` manually to skip an
-individual command if needed.
+Git hooks powered by Lefthook run `bun run format:check` と `bun run lint`
+を自動実行し、リポジトリを常に整えます。Secretlint も pre-commit で実行され、機密情報の混入を防ぎます。Before
+pushing, Lefthook also triggers a production build (`bun run build`) and a Cloudflare Workers dry
+run (`bun run cf:dry-run`) to catch deployment issues early. Set `SKIP=build` or `SKIP=cloudflare`
+when running `lefthook run` manually to skip an individual command if needed.
 
 ## 👀 Want to learn more?
 

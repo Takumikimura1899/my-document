@@ -5,6 +5,8 @@ pre-commit:
       run: bun run format:check
     lint:
       run: bun run lint
+    secrets:
+      run: bun run lint:secrets
 
 pre-push:
   parallel: false
