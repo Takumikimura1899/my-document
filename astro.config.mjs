@@ -12,10 +12,46 @@ export default defineConfig({
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
       sidebar: [
         {
-          label: 'Guides',
+          label: 'はじめに',
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: 'Example Guide', slug: 'guides/example' }
+            { label: '概要', slug: 'intro' },
+            { label: '価値観', slug: 'intro/values' },
+            { label: '開発プロセス', slug: 'intro/workflow' },
+            { label: 'コミュニケーション', slug: 'intro/communication' }
+          ]
+        },
+        {
+          label: 'Frontend',
+          items: [
+            { label: '概要', slug: 'frontend' },
+            { label: 'UI コンポーネント', slug: 'frontend/components' },
+            { label: 'スタイリング', slug: 'frontend/styling' }
+          ]
+        },
+        {
+          label: 'Backend',
+          items: [
+            { label: '概要', slug: 'backend' },
+            { label: 'アーキテクチャ', slug: 'backend/architecture' },
+            { label: 'API ガイドライン', slug: 'backend/api-guidelines' },
+            { label: 'デプロイ戦略', slug: 'backend/deployment' }
+          ]
+        },
+        {
+          label: 'Test',
+          items: [
+            { label: '概要', slug: 'test' },
+            { label: 'ユニットテスト', slug: 'test/unit-testing' },
+            { label: 'E2E テスト', slug: 'test/e2e-testing' }
+          ]
+        },
+        {
+          label: 'Other',
+          items: [
+            { label: '概要', slug: 'other' },
+            { label: 'セキュリティ', slug: 'other/security' },
+            { label: 'アクセシビリティ', slug: 'other/accessibility' },
+            { label: '運用・サポート', slug: 'other/operations' }
           ]
         },
         {

@@ -1,36 +1,44 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: チームドキュメントへようこそ
+description: チーム文化と開発のベストプラクティスをまとめたハンドブックです。
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: プロダクトを前進させるための共通の知識と合意をここに集約しました。
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+    - text: はじめに読む
+      link: /intro/
+    - text: 開発プロセスを見る
+      link: /intro/workflow/
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components'
 
-## Next steps
+## カテゴリ別ガイド
 
 <CardGrid stagger>
-  <Card title="Update content" icon="pencil">
-    Edit `src/content/docs/index.mdx` to see this page change.
+  <Card title="はじめに" icon="sparkles">
+    チームの価値観やコミュニケーションのルールなど、共通の前提をまとめています。
+    [概要ページへ](/intro/)
   </Card>
-  <Card title="Add new content" icon="add-document">
-    Add Markdown or MDX files to `src/content/docs` to create new pages.
+  <Card title="Frontend" icon="layout">
+    UI コンポーネント設計やスタイリングのベストプラクティスを紹介します。
+    [カテゴリを見る](/frontend/)
   </Card>
-  <Card title="Configure your site" icon="setting">
-    Edit your `sidebar` and other config in `astro.config.mjs`.
+  <Card title="Backend" icon="server">
+    アーキテクチャ、API 設計、デプロイ戦略などサーバーサイドの指針です。 [カテゴリを見る](/backend/)
   </Card>
-  <Card title="Read the docs" icon="open-book">
-    Learn more in [the Starlight Docs](https://starlight.astro.build/).
+  <Card title="Test" icon="check">
+    テスト戦略と自動化の進め方、主要ツールの使い方をまとめています。 [カテゴリを見る](/test/)
+  </Card>
+  <Card title="Other" icon="shield">
+    セキュリティ、アクセシビリティ、運用など横断的な知見を整理しています。 [カテゴリを見る](/other/)
   </Card>
 </CardGrid>
+
+## 更新の進め方
+
+- 新しい知見やルールが生まれたら、関連ページを更新しチームに共有してください。
+- 迷ったときは「はじめに」の各ページを基点に、詳細なカテゴリへ遷移できるようにしています。
+- Pull Request では変更の背景と確認観点を明示し、レビュアーと合意を得た内容を残しましょう。
