@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      run: bun run format:check
+    lint:
+      run: bun run lint
+
+pre-push:
+  parallel: false
+  commands:
+    build:
+      run: bun run build
+    cloudflare:
+      run: bun run cf:dry-run

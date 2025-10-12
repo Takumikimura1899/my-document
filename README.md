@@ -55,6 +55,11 @@ The project now ships with opinionated Markdown tooling:
   `.markdownlint-cli2.jsonc`.
 
 Prettier ignores build outputs (`dist`, `.astro`, etc.) and markdownlint skips generated folders.
+Git hooks powered by Lefthook run `bun run format:check` and `bun run lint` automatically before
+each commit to keep the repository tidy. Before pushing, Lefthook also triggers a production build
+(`bun run build`) and a Cloudflare Workers dry run (`bun run cf:dry-run`) to catch deployment issues
+early. Set `SKIP=build` or `SKIP=cloudflare` when running `lefthook run` manually to skip an
+individual command if needed.
 
 ## 👀 Want to learn more?
 

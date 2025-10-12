@@ -10,6 +10,7 @@
     "astro": "astro",
     "deploy": "astro build && wrangler deploy",
     "cf-typegen": "wrangler types",
+    "cf:dry-run": "wrangler deploy --dry-run",
     "format": "prettier --cache --write .",
     "format:check": "prettier --cache --check .",
     "lint": "markdownlint-cli2"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/node": "^24.7.2",
     "markdownlint-cli2": "^0.18.1",
+    "lefthook": "^1.13.6",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^0.14.1",
     "wrangler": "^4.42.2"
