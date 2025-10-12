@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+  "globs": ["README.md", "src/**/*.md", "src/**/*.mdx"],
+  "ignores": ["**/node_modules/**", "dist/**", ".astro/**", "public/**"],
+  "config": {
+    "MD013": {
+      "line_length": 120,
+      "code_blocks": false,
+      "tables": false,
+    },
+    "MD024": false,
+    "MD025": {
+      "front_matter_title": "",
+    },
+    "MD033": false,
+    "MD041": false,
+  },
+}

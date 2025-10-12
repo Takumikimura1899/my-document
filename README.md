@@ -2,7 +2,7 @@
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-```
+```bash
 bun create astro@latest -- --template starlight
 ```
 
@@ -12,7 +12,7 @@ bun create astro@latest -- --template starlight
 
 Inside of your Astro + Starlight project, you'll see the following folders and files:
 
-```
+```text
 .
 ├── public/
 ├── src/
@@ -25,7 +25,8 @@ Inside of your Astro + Starlight project, you'll see the following folders and f
 └── tsconfig.json
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed
+as a route based on its file name.
 
 Images can be added to `src/assets/` and embedded in Markdown with a relative link.
 
@@ -35,15 +36,28 @@ Static assets, like favicons, can be placed in the `public/` directory.
 
 All commands are run from the root of the project, from a terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
+| Command               | Action                                           |
+| :-------------------- | :----------------------------------------------- |
+| `bun install`         | Installs dependencies                            |
 | `bun dev`             | Starts local dev server at `localhost:4321`      |
 | `bun build`           | Build your production site to `./dist/`          |
 | `bun preview`         | Preview your build locally, before deploying     |
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
+## 🧹 Formatting & linting
+
+The project now ships with opinionated Markdown tooling:
+
+- `bun run format` — formats Markdown, MDX, Astro, and config files with Prettier.
+- `bun run format:check` — checks whether files are already formatted.
+- `bun run lint` — lints Markdown/MDX content via `markdownlint-cli2` using the rules in
+  `.markdownlint-cli2.jsonc`.
+
+Prettier ignores build outputs (`dist`, `.astro`, etc.) and markdownlint skips generated folders.
+
 ## 👀 Want to learn more?
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+Check out [Starlight’s docs](https://starlight.astro.build/), read
+[the Astro documentation](https://docs.astro.build), or jump into the
+[Astro Discord server](https://astro.build/chat).

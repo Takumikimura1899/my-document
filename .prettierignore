@@ -1,0 +1,12 @@
+# Build and dependency outputs
+node_modules
+.dist
+.astro
+dist
+
+# Platform-specific artifacts
+.wrangler
+.vscode
+
+# Generated assets
+public
