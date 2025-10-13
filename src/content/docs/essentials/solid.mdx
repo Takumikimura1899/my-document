@@ -1,0 +1,437 @@
+---
+title: SOLID 原則
+description: 保守性の高い設計を実現するための 5 つの基本原則を整理します。
+---
+
+## SOLID原則とは？
+
+SOLIDはソフトウェア設計における5つの基本原則の頭文字を取ったもので、以下の原則から構成されます。
+
+- S - Single Responsibility Principle (単一責任の原則)
+- O - Open/Closed Principle (開放/閉鎖の原則)
+- L - Liskov Substitution Principle (リスコフの置換原則)
+- I - Interface Segregation Principle (インターフェース分離の原則)
+- D - Dependency Inversion Principle (依存関係逆転の原則)
+
+## このドキュメントの目的
+
+以下を目的に活用します。
+
+- 実装方針の共通言語として議論を円滑にする
+- リファクタリングや設計レビュー時のチェックリストとして利用する
+- 過度な抽象化を避けつつ、将来の変更コストを下げる
+
+## Single Responsibility Principle (単一責任の原則)
+
+> クラスやモジュールは「たった 1 つのこと」に責任を持つ。
+
+- 変更理由が複数ある構造は分割を検討する
+- UI・ドメイン・インフラなど関心事を明確に分離する
+- 複数の責任を持つと一つの変更が他に影響を与える可能性があり、保守性が低下する
+
+<details>
+  <summary>👎 悪い例</summary>
+  Employeeクラスが、従業員情報の管理と給与計算の両方の責任を持っています。
+
+```typescript
+class Employee {
+  public name: string
+  public department: string
+
+  constructor(name: string, department: string) {
+    this.name = name
+    this.department = department
+  }
+
+  // 責任1: 従業員情報の詳細を取得
+  getEmployeeDetails() {
+    return `${this.name} works in ${this.department}`
+  }
+
+  // 責任2: 給与を計算する
+  calculateSalary() {
+    // 部署ごとに複雑な給与計算ロジック...
+    if (this.department === 'Sales') {
+      return 5000
+    }
+    return 4000
+  }
+}
+```
+
+</details>
+
+<details>
+  <summary>👍 良い例</summary>
+  責任を2つのクラスに分割します。
+
+```typescript
+// 責任1: 従業員データの管理に特化
+class EmployeeData {
+  public name: string
+  public department: string
+
+  constructor(name: string, department: string) {
+    this.name = name
+    this.department = department
+  }
+
+  getEmployeeDetails() {
+    return `${this.name} works in ${this.department}`
+  }
+}
+
+// 責任2: 給与計算に特化
+class SalaryCalculator {
+  public calculateSalary(employee: EmployeeData) {
+    if (employee.department === 'Sales') {
+      return 5000
+    }
+    return 4000
+  }
+}
+```
+
+</details>
+
+## Open/Closed Principle (開放/閉鎖の原則)
+
+> 既存コードは拡張に対して開かれ、修正に対して閉じているべき。
+
+- 新しい振る舞いを追加する際は既存コードを修正することなく、新しい振る舞いを追加できる設計を目指す
+- 抽象インターフェースや戦略パターンを活用し、条件分岐の肥大化を防ぐ
+- 想定される拡張点を設計段階で合意し、過剰な抽象化は避ける
+
+<details>
+  <summary>👎 悪い例</summary>
+  新しい図形を追加するたびにAreaCalculatorクラスのcalculateメソッドを修正する必要があります。
+
+```typescript
+class Rectangle {
+  public width: number
+  public height: number
+  // ... constructor
+}
+
+class Circle {
+  public radius: number
+  // ... constructor
+}
+
+class AreaCalculator {
+  public calculate(shapes: (Rectangle | Circle)[]) {
+    let totalArea = 0
+    for (const shape of shapes) {
+      if (shape instanceof Rectangle) {
+        totalArea += shape.width * shape.height
+      }
+      if (shape instanceof Circle) {
+        totalArea += shape.radius * shape.radius * Math.PI
+      }
+      // 新しい図形「Triangle」を追加するには、ここに if文 を追加修正する必要がある！
+    }
+    return totalArea
+  }
+}
+```
+
+</details>
+
+<details>
+  <summary>👍 良い例</summary>
+  各図形が自分自身の面積を計算する責任を持つようにします。AreaCalculatorはそれを呼び出すだけです。
+
+```typescript
+interface Shape {
+  getArea(): number
+}
+
+class Rectangle implements Shape {
+  public width: number
+  public height: number
+  // ... constructor
+  getArea() {
+    return this.width * this.height
+  }
+}
+
+class Circle implements Shape {
+  public radius: number
+  // ... constructor
+  getArea() {
+    return this.radius * this.radius * Math.PI
+  }
+}
+
+// 新しい図形「Triangle」を追加しても、AreaCalculatorの修正は不要！
+class Triangle implements Shape {
+  // ...
+  getArea() {
+    /* ... */
+  }
+}
+
+class AreaCalculator {
+  public calculate(shapes: Shape[]) {
+    let totalArea = 0
+    for (const shape of shapes) {
+      totalArea += shape.getArea() // どんな図形でも getArea() を呼ぶだけ
+    }
+    return totalArea
+  }
+}
+```
+
+</details>
+
+## Liskov Substitution Principle (リスコフの置換原則)
+
+> 派生型は、その基本型と置換可能でなければならない。
+
+- サブクラスで前提条件を厳しくしたり、戻り値を破壊的に変更しない
+- テストでは親クラスの仕様を満たすことを確認し、破綻リスクを検知する
+- 継承よりもコンポジションを優先し、置換不能な関係を避ける
+
+<details>
+  <summary>👎 悪い例</summary>
+  Birdクラスを継承したPenguinクラスがflyメソッドを適切に実装できず、例外を投げています。
+
+```typescript
+class Bird {
+  fly() {
+    console.log('I am flying!')
+  }
+}
+
+class Penguin extends Bird {
+  // ペンギンは飛べない！ 親の振る舞いを上書きして壊してしまっている。
+  fly() {
+    throw new Error('Cannot fly')
+  }
+
+  swim() {
+    console.log('I can swim!')
+  }
+}
+
+function makeBirdFly(bird: Bird) {
+  bird.fly()
+}
+
+const bird = new Bird()
+const penguin = new Penguin()
+
+makeBirdFly(bird) // "I am flying!" -> OK
+makeBirdFly(penguin) // Error: Cannot fly -> プログラムがクラッシュ！
+```
+
+</details>
+
+<details>
+  <summary>👍 良い例</summary>
+  継承関係を見直し、「飛べる鳥」と「泳げる鳥」というように、より適切な抽象化を行います。
+
+```typescript
+class Bird {
+  // 共通の振る舞いをここに
+}
+
+// 飛ぶ能力を持つインターフェース
+interface Flyable {
+  fly(): void
+}
+
+// 泳ぐ能力を持つインターフェース
+interface Swimmable {
+  swim(): void
+}
+
+class Sparrow extends Bird implements Flyable {
+  fly() {
+    console.log('I am flying!')
+  }
+}
+
+class Penguin extends Bird implements Swimmable {
+  swim() {
+    console.log('I am swimming!')
+  }
+}
+
+function makeFlyingBirdFly(bird: Flyable) {
+  bird.fly()
+}
+
+const sparrow = new Sparrow()
+makeFlyingBirdFly(sparrow) // OK
+// const penguin = new Penguin();
+// makeFlyingBirdFly(penguin); // 型エラー！コンパイル時に間違いに気づける
+```
+
+</details>
+
+## Interface Segregation Principle (インターフェース分離の原則)
+
+> クライアントは利用しないメソッドへの依存を強制されるべきでない。
+
+- 大きなインターフェースは役割ごとに分割し、必要最小限の契約を提供する
+- TypeScript の型ではユニオン型や部分型を活用し、利用側の自由度を確保する
+- テストダブルが過剰なスタブを要求する場合はインターフェースの見直しサイン
+
+<details>
+  <summary>👎 悪い例</summary>
+  Workerインターフェースがworkとeatの両方を要求しています。しかし、ロボットは食事をしません。
+
+```typescript
+interface Worker {
+  work(): void
+  eat(): void // ロボットには不要なメソッド
+}
+
+class Human implements Worker {
+  work() {
+    /* ... */
+  }
+  eat() {
+    /* ... */
+  }
+}
+
+class Robot implements Worker {
+  work() {
+    /* ... */
+  }
+
+  // 不要なのに実装を強制される。中身は空にするしかない。
+  eat() {
+    // ロボットは食事しない
+  }
+}
+```
+
+</details>
+
+<details>
+  <summary>👍 良い例</summary>
+  インターフェースを「働く」と「食べる」に分割します。
+
+```typescript
+interface Workable {
+  work(): void
+}
+
+interface Eatable {
+  eat(): void
+}
+
+// 人間は両方実装する
+class Human implements Workable, Eatable {
+  work() {
+    /* ... */
+  }
+  eat() {
+    /* ... */
+  }
+}
+
+// ロボットは必要なものだけ実装する
+class Robot implements Workable {
+  work() {
+    /* ... */
+  }
+}
+```
+
+</details>
+
+## Dependency Inversion Principle (依存関係逆転の原則)
+
+> 抽象に依存し、具体に依存しない。
+
+- ドメイン層はインフラ層の具体実装に依存せず、ポート/アダプタの構造を採用する
+- 依存注入 (DI) やファクトリを活用してテスト可能性を高める
+- 環境依存の実装はエッジに隔離し、設定で差し替えられるようにする
+
+<details>
+  <summary>👎 悪い例</summary>
+  Notificationクラスが、具体的なEmailSenderクラスに直接依存しています。
+
+```typescript
+// 詳細（具体的な実装）
+class EmailSender {
+  send(message: string) {
+    console.log('Sending email:', message)
+  }
+}
+
+// 上位レベルのモジュールが、下位レベルのモジュールに直接依存している
+class Notification {
+  private emailSender: EmailSender
+
+  constructor() {
+    this.emailSender = new EmailSender() // new で直接インスタンス化！
+  }
+
+  sendNotification(message: string) {
+    this.emailSender.send(message)
+  }
+}
+```
+
+</details>
+
+<details>
+  <summary>👍 良い例</summary>
+  Notificationクラスが、具体的なクラスではなくMessageSenderというインターフェースに依存するようにします。
+
+```typescript
+// 抽象
+interface MessageSender {
+  send(message: string): void
+}
+
+// 詳細 (抽象に依存)
+class EmailSender implements MessageSender {
+  send(message: string) {
+    console.log('Sending email:', message)
+  }
+}
+
+// 詳細 (抽象に依存)
+class SMSSender implements MessageSender {
+  send(message: string) {
+    console.log('Sending SMS:', message)
+  }
+}
+
+// 上位レベルのモジュールが抽象に依存
+class Notification {
+  // 依存するものを外部から注入する (Dependency Injection)
+  constructor(private sender: MessageSender) {}
+
+  sendNotification(message: string) {
+    this.sender.send(message)
+  }
+}
+
+// 利用側で、具体的な実装を「注入」する
+const emailNotification = new Notification(new EmailSender())
+emailNotification.sendNotification('Hello via Email!')
+
+const smsNotification = new Notification(new SMSSender())
+smsNotification.sendNotification('Hello via SMS!')
+```
+
+</details>
+
+## 実務への適用ガイド
+
+- プルリクエストの説明に SOLID 観点での工夫や妥協点があれば明示する
+- 設計レビューでは「どの原則を満たし、どこにトレードオフがあるか」を確認する
+- 原則に拘りすぎて複雑化しないよう、チームでリファクタリングの優先度を合意する
+
+## 参考資料
+
+- Robert C. Martin, _Agile Software Development: Principles, Patterns, and Practices_
+- [SOLID 原則 - Wikipedia](https://ja.wikipedia.org/wiki/SOLID)
+- [Clean Architecture の要約資料 (外部)](https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html)
