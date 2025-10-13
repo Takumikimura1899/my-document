@@ -12,6 +12,16 @@ export default defineConfig({
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
       sidebar: [
         {
+          label: '必読ガイド',
+          items: [
+            { label: '概要', slug: 'essentials' },
+            { label: '開発環境セットアップ', slug: 'essentials/environment' },
+            { label: 'コーディング標準', slug: 'essentials/coding-standards' },
+            { label: 'SOLID 原則', slug: 'essentials/solid' },
+            { label: 'リリースチェックリスト', slug: 'essentials/release-checklist' }
+          ]
+        },
+        {
           label: 'はじめに',
           items: [
             { label: '概要', slug: 'intro' },

@@ -1,0 +1,37 @@
+---
+title: 開発環境セットアップ
+description: ローカル環境を素早く構築するための手順とチェックリストです。
+---
+
+## 前提条件
+
+- Node.js / Bun: `.tool-versions` に記載のバージョンを利用し、`mise` もしくは `asdf` で管理する
+- Git: バージョン 2.40 以上
+- エディタ: VS Code を推奨（推奨拡張は `.vscode/extensions.json` を参照）
+
+## 初回セットアップ
+
+1. リポジトリをクローンし、`bun install` で依存関係をインストールする
+2. `bun run format:check` と `bun run lint` を実行し、初期状態でエラーがないことを確認する
+3. `bun run dev` で開発サーバーを起動し、`http://localhost:4321` が表示できるかチェックする
+4. Git フックが動作するか `lefthook run pre-commit` を手動実行して確認する
+
+## 推奨ツール設定
+
+- VS Code の `settings.json` で Format on Save を有効化（既定の `.vscode/settings.json` 参照）
+- markdownlint のルールは `.markdownlint-cli2.jsonc` を参照し、エディタ側でも同じルールが適用されるよう設定する
+- Secretlint を単独で実行したい場合は `bun run lint:secrets` を使用
+
+## トラブルシューティング
+
+| 症状                                         | 対処                                                                     |
+| -------------------------------------------- | ------------------------------------------------------------------------ |
+| `bun install` でエラーが出る                 | `bun pm cache rm` を実行してから再インストールする                       |
+| Git フックが動かない                         | `lefthook install` を再実行し、`.git/hooks` 配下にスクリプトがあるか確認 |
+| ビルド時に Cloudflare のバインディングエラー | `wrangler.toml` または `wrangler.jsonc` に必要な KV/変数設定を追加       |
+
+## 継続的なメンテナンス
+
+- 依存関係の更新は月1回を目安に `bun update` で確認し、影響がないか検証する
+- 新しいツールや拡張を導入したらこのページに追記して共有する
+- セットアップ手順の変更は PR でレビューを受け、周知する
