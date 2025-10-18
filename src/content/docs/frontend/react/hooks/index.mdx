@@ -1,0 +1,84 @@
+---
+title: Hooks
+description: React Hooks を安全かつ再利用しやすく実装するための指針をまとめます。
+---
+
+## 基本方針
+
+- Hooks は「状態管理」と「副作用の制御」を明確に切り分ける
+- コンポーネントから複雑なロジックを切り出し、再利用できるカスタム Hooks を積極的に活用する
+- フレームワーク固有の制約（SSR、Streaming、`use client` 等）を踏まえた上で設計する
+
+## 組み込み Hooks の使い分け
+
+| 用途           | 推奨 Hook                 | 補足                                                   |
+| -------------- | ------------------------- | ------------------------------------------------------ |
+| ローカル状態   | `useState` / `useReducer` | 更新が複雑な場合は `useReducer` を検討                 |
+| 副作用         | `useEffect`               | 非同期処理はキャンセル制御やクリーンアップを意識       |
+| メモ化         | `useMemo` / `useCallback` | 過剰なメモ化は避け、ボトルネック解消が目的の場合に限定 |
+| コンテキスト   | `useContext`              | グローバル状態を必要最小限に絞る                       |
+| レイアウト効果 | `useLayoutEffect`         | DOM 計測や同期的な描画調整に使用                       |
+
+## カスタム Hooks を設計する際のポイント
+
+- **命名には意図を反映する**: `use` で始め、Hookが提供する価値を明確にする
+- **単一責任の原則を守る**: 1つのHookは1つの関心事に集中させる
+- **副作用の責務を閉じ込める**: `localStorage` や `IntersectionObserver` など外部とのやり取りはカスタム Hook 内で完結させる
+- **テスト容易性を確保する**: React Testing Library の `renderHook` などを使い、ユニットテスト可能な構造にする
+
+```tsx
+import { useEffect, useState } from 'react'
+
+type UseDebouncedValueOptions = {
+  wait?: number
+  isEnabled?: boolean
+}
+
+export const useDebouncedValue = <T>(value: T, { wait = 300, isEnabled = true }: UseDebouncedValueOptions = {}) => {
+  const [debounced, setDebounced] = useState(value)
+
+  useEffect(() => {
+    if (!isEnabled) {
+      setDebounced(value)
+      return
+    }
+
+    const id = setTimeout(() => {
+      setDebounced(value)
+    }, wait)
+
+    return () => {
+      clearTimeout(id)
+    }
+  }, [value, wait, isEnabled])
+
+  return debounced
+}
+
+// usage
+// const debouncedSearch = useDebouncedValue(searchTerm, { wait: 500 })
+```
+
+### データフェッチ系 Hook の扱い
+
+- キャッシュや同時実行制御が必要なデータフェッチは、TanStack Query や SWR などの専用ライブラリに委ねる
+- カスタム Hook は、`useQuery` などの呼び出しをラップし、ドメイン固有のオプション設定や整形処理をまとめると再利用しやすい
+- 軽量な単発フェッチで独自 Hook を用意する場合でも、エラーハンドリングやキャンセル制御を切り捨てないようにする
+
+## SSR / Streaming を考慮した Hooks
+
+- サーバーコンポーネントとクライアントコンポーネントの境界では、`use client` を明示しクライアント側のみで Hook を利用する
+- ブラウザ API に依存する Hook は SSR 環境で実行されないようガードを入れる（`typeof window !== 'undefined'` など）
+
+## よくあるアンチパターン
+
+- **純粋関数のみの場合カスタムHookとして扱わない**: Hookを使わない、Reactのライフサイクルに依存しないロジックは通常の関数として実装する
+- **条件分岐内で Hook を呼ぶ**: フックの呼び出し順が変わり `Rules of Hooks` に違反する
+- **依存配列を誤る**: `useEffect`/`useCallback` の依存関係を省略すると stale data やメモリリークの原因となる
+- **ドメインロジックを複数の Hook に分散させる**: 挙動が追えなくなるため、責務を 1 つの Hook にまとめるか専用のモジュールに移す
+
+## 参考リンク
+
+- [Rules of Hooks – React Docs](https://react.dev/reference/rules/rules-of-hooks)
+- [Building Your Own Hooks – React Docs](https://react.dev/learn/reusing-logic-with-custom-hooks)
+- [React Hooks Testing Library](https://github.com/testing-library/react-hooks-testing-library)
