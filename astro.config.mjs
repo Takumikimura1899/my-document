@@ -51,7 +51,8 @@ export default defineConfig({
             { label: '概要', slug: 'backend' },
             { label: 'アーキテクチャ', slug: 'backend/architecture' },
             { label: 'API ガイドライン', slug: 'backend/api-guidelines' },
-            { label: 'デプロイ戦略', slug: 'backend/deployment' }
+            { label: 'デプロイ戦略', slug: 'backend/deployment' },
+            { label: '技術選定基準', slug: 'backend/technology-selection' }
           ]
         },
         {
