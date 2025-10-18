@@ -34,6 +34,13 @@ export default defineConfig({
           label: 'Frontend',
           items: [
             { label: '概要', slug: 'frontend' },
+            {
+              label: 'React ガイド',
+              items: [
+                { label: '概要', slug: 'frontend/react' },
+                { label: 'Hooks', slug: 'frontend/react/hooks' }
+              ]
+            },
             { label: 'UI コンポーネント', slug: 'frontend/components' },
             { label: 'スタイリング', slug: 'frontend/styling' }
           ]
