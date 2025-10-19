@@ -1,7 +1,6 @@
-// @ts-check
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
-import rehypeMermaid from 'rehype-mermaid'
+import mermaid from 'astro-mermaid'
 
 import cloudflare from '@astrojs/cloudflare'
 
@@ -88,12 +87,12 @@ export default defineConfig({
           autogenerate: { directory: 'reference' }
         }
       ]
+    }),
+    mermaid({
+      theme: 'forest',
+      autoTheme: true
     })
   ],
-  markdown: {
-    syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid', 'math'] },
-    rehypePlugins: [rehypeMermaid]
-  },
 
   adapter: cloudflare({
     platformProxy: {
