@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
+import rehypeMermaid from 'rehype-mermaid'
 
 import cloudflare from '@astrojs/cloudflare'
 
@@ -52,7 +53,17 @@ export default defineConfig({
             { label: 'アーキテクチャ', slug: 'backend/architecture' },
             { label: 'API ガイドライン', slug: 'backend/api-guidelines' },
             { label: 'デプロイ戦略', slug: 'backend/deployment' },
-            { label: '技術選定基準', slug: 'backend/technology-selection' }
+            {
+              label: '技術選定基準',
+              items: [
+                { label: '概要', slug: 'backend/technology-selection' },
+                {
+                  label: 'TypeScript フレームワーク',
+                  slug: 'backend/technology-selection/typescript-frameworks'
+                },
+                { label: 'Go フレームワーク', slug: 'backend/technology-selection/go-frameworks' }
+              ]
+            }
           ]
         },
         {
@@ -79,6 +90,10 @@ export default defineConfig({
       ]
     })
   ],
+  markdown: {
+    syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid', 'math'] },
+    rehypePlugins: [rehypeMermaid]
+  },
 
   adapter: cloudflare({
     platformProxy: {
