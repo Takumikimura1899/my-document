@@ -1,11 +1,13 @@
 ---
 title: Frontend 概要
-description: UI 実装の方針と開発体制の概要をまとめます。
+description: フロントエンド開発体制の概要をまとめます。
 ---
 
 ## 対象範囲
 
-- Astro / Starlight を中心としたサイト構築
+- ブラウザ上で動作するアプリケーション全般（SPA、MPA、PWA など）
+- サーバーサイドレンダリング（SSR）や静的サイト生成（SSG）を含む場合もある
+- UI/UX デザインの実装と連携
 - UI コンポーネント（React など）とデザインシステムの連携
 - パフォーマンス最適化、アクセシビリティ、国際化対応
 
@@ -15,9 +17,13 @@ description: UI 実装の方針と開発体制の概要をまとめます。
 - デザインとの同期を保つため、デザインツールとドキュメントを往復する仕組みを整える
 - ビルド時の警告や lint エラーは常に解消する
 
-## 次に読む
+## 技術選定基準
 
-- [React ガイド](/docs/frontend/react/)
-- [Hooks のベストプラクティス](/docs/frontend/react/hooks/)
-- [UI コンポーネント設計](/docs/frontend/components/)
-- [スタイリングガイド](/docs/frontend/styling/)
+- React, TypeScriptをデファクトスタンダードとする
+- 要件に応じてAstroやSvelteなどの採用も検討する
+
+### 指針
+
+- フルスタックSSR: Next.js / React Router / Tanstack Start
+- SSG, MPA: Astro
+- 軽量SPA: Vite + React / Svelte
