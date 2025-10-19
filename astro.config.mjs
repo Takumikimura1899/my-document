@@ -18,6 +18,7 @@ export default defineConfig({
             { label: '開発環境セットアップ', slug: 'essentials/environment' },
             { label: 'コーディング標準', slug: 'essentials/coding-standards' },
             { label: 'SOLID 原則', slug: 'essentials/solid' },
+            { label: '命令型と宣言型', slug: 'essentials/imperative-vs-declarative' },
             { label: 'リリースチェックリスト', slug: 'essentials/release-checklist' }
           ]
         },
