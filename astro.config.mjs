@@ -35,6 +35,7 @@ export default defineConfig({
           label: 'Frontend',
           items: [
             { label: '概要', slug: 'frontend' },
+            { label: '状態管理', slug: 'frontend/state-management' },
             {
               label: 'React ガイド',
               items: [
